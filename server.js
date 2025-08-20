@@ -1,6 +1,9 @@
 const express = require('express');
 const path = require('path');
 const app = express();
+const cors = require('cors');
+app.use(cors());
+
 app.use(express.json());
 
 // Lista de convidados
@@ -24,12 +27,12 @@ app.get('/', (req, res) => {
 });
 
 // Rota para obter a lista
-app.get('/convidados', (req, res) => {
+app.get('https://rsvp-backend-1ry5.onrender.com/convidados', (req, res) => {
   res.json(convidados);
 });
 
 // Rota para confirmar presença
-app.post('/confirmar-presenca', (req, res) => {
+app.post('https://rsvp-backend-1ry5.onrender.com/confirmar-presenca', (req, res) => {
   const nome = req.body.nome;
   const convidado = convidados.find(c => c.nome.toLowerCase() === nome.toLowerCase());
   if (!convidado) {

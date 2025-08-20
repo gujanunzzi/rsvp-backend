@@ -203,7 +203,7 @@
 
   async function loadGuestList() {
     try {
-      const res = await fetch('/convidados');
+      const res = await fetch('https://rsvp-backend-1ry5.onrender.com/convidados');
       if (!res.ok) throw new Error('Erro ao carregar lista');
       guests = await res.json();
       renderGuestList();
@@ -232,7 +232,7 @@
     }
 
     try {
-      const res = await fetch('/confirmar-presenca', {
+      const res = await fetch('https://rsvp-backend-1ry5.onrender.com/confirmar-presenca', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nome: guest.nome })
