@@ -27,12 +27,12 @@ app.get('/', (req, res) => {
 });
 
 // Rota para obter a lista
-app.get('https://rsvp-backend-1ry5.onrender.com/convidados', (req, res) => {
+app.get('/convidados', (req, res) => {
   res.json(convidados);
 });
 
 // Rota para confirmar presença
-app.post('https://rsvp-backend-1ry5.onrender.com/confirmar-presenca', (req, res) => {
+app.post('/confirmar-presenca', (req, res) => {
   const nome = req.body.nome;
   const convidado = convidados.find(c => c.nome.toLowerCase() === nome.toLowerCase());
   if (!convidado) {
