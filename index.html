@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Confirmação de Presença - Casamento</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f8f4f0;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    h1 { color: #8b3a3a; }
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+    }
+    form {
+      margin-top: 15px;
+      position: relative;
+    }
+    input {
+      padding: 10px;
+      width: 100%;
+      font-size: 1em;
+      box-sizing: border-box;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px;
+      width: 100%;
+      font-size: 1em;
+      background-color: #8b3a3a;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    #message {
+      margin-top: 15px;
+      min-height: 1.5em;
+    }
+    .success { color: green; }
+    .error { color: red; }
+    .guest-list {
+      max-width: 400px;
+      width: 100%;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      max-height: 350px;
+      overflow-y: auto;
+    }
+    .guest-list h2 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: #8b3a3a;
+    }
+    .guest {
+      padding: 6px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 1em;
+      user-select: none;
+    }
+    .confirmed {
+      text-decoration: line-through;
+      color: #aaa;
+    }
+    /* Autocomplete suggestions */
+    #suggestions {
+      position: absolute;
+      background: white;
+      border: 1px solid #ccc;
+      border-top: none;
+      width: 100%;
+      max-height: 150px;
+      overflow-y: auto;
+      box-sizing: border-box;
+      border-radius: 0 0 5px 5px;
+      z-index: 1000;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    #suggestions li {
+      padding: 8px 10px;
+      cursor: pointer;
+    }
+    #suggestions li:hover {
+      background-color: #f0e6e6;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Confirme sua Presença</h1>
+  <div class="card">
+    <p><strong>Digite o nome igual o da lista e confirme sua presença.</strong></p>
+    <form id="rsvpForm" autocomplete="off" novalidate>
+      <input type="text" id="guestName" placeholder="Seu nome completo" />
+      <ul id="suggestions"></ul>
+      <button type="submit">Confirmar Presença</button>
+    </form>
+    <div id="message"></div>
+  </div>
+
+  <div class="guest-list">
+    <h2>Lista de Convidados</h2>
+    <div id="guestListContainer"></div>
+  </div>
+
+<script>
+  const form = document.getElementById('rsvpForm');
+  const input = document.getElementById('guestName');
+  const suggestionsEl = document.getElementById('suggestions');
+  const message = document.getElementById('message');
+  const guestListContainer = document.getElementById('guestListContainer');
+
+  // Vai guardar a lista do backend
+  let guests = [];
+
+  function normalizeName(name) {
+  return name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
+
+  function showMessage(text, type) {
+    message.innerHTML = `<p class="${type}">${text}</p>`;
+  }
+
+  function clearMessage() {
+    message.innerHTML = '';
+  }
+
+  function clearSuggestions() {
+    suggestionsEl.innerHTML = '';
+    suggestionsEl.style.display = 'none';
+  }
+
+  function updateSuggestions() {
+    const term = normalizeName(input.value);
+    if (!term) {
+      clearSuggestions();
+      return;
+    }
+
+    const matches = guests.filter(g =>
+  normalizeName(g.nome).startsWith(term) && !g.confirmado
+);
+
+
+    if (matches.length === 0) {
+      clearSuggestions();
+      return;
+    }
+
+    suggestionsEl.innerHTML = '';
+    matches.forEach(g => {
+      const li = document.createElement('li');
+      li.textContent = g.nome;
+      li.addEventListener('click', () => {
+        input.value = g.nome;
+        clearSuggestions();
+        confirmPresence();
+      });
+      suggestionsEl.appendChild(li);
+    });
+    suggestionsEl.style.display = 'block';
+  }
+
+  function renderGuestList() {
+    guestListContainer.innerHTML = '';
+    guests.forEach(g => {
+      const div = document.createElement('div');
+      div.className = 'guest';
+      if (g.confirmado) div.classList.add('confirmed');
+      div.textContent = g.nome;
+      guestListContainer.appendChild(div);
+    });
+  }
+
+  async function loadGuestList() {
+    try {
+      const res = await fetch('/convidados');
+      if (!res.ok) throw new Error('Erro ao carregar lista');
+      guests = await res.json();
+      renderGuestList();
+    } catch (e) {
+      showMessage('Erro ao carregar a lista de convidados.', 'error');
+    }
+  }
+
+  async function confirmPresence() {
+    clearMessage();
+    const name = input.value.trim();
+    if (!name) {
+      showMessage('Por favor, digite seu nome.', 'error');
+      return;
+    }
+
+    const guest = guests.find(g => normalizeName(g.nome) === normalizeName(name));
+    if (!guest) {
+      showMessage('Nome não encontrado na lista.', 'error');
+      return;
+    }
+
+    if (guest.confirmado) {
+      showMessage('Presença já confirmada.', 'error');
+      return;
+    }
+
+    try {
+      const res = await fetch('/confirmar-presenca', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome: guest.nome })
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        showMessage(`Obrigado, ${guest.nome}! Presença confirmada 🎉`, 'success');
+        input.value = '';
+        await loadGuestList();
+        clearSuggestions();
+      } else {
+        showMessage(data.error || 'Erro ao confirmar presença.', 'error');
+      }
+    } catch {
+      showMessage('Erro de conexão. Tente novamente.', 'error');
+    }
+  }
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    confirmPresence();
+  });
+
+  input.addEventListener('input', updateSuggestions);
+
+  document.addEventListener('click', e => {
+    if (!form.contains(e.target)) {
+      clearSuggestions();
+    }
+  });
+
+  // Carregar lista no início
+  loadGuestList();
+</script>
+</body>
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sorteio</title>
+  <link href="https://fonts.googleapis.com/css2?family=DSEG7+Classic+Mini&display=swap" rel="stylesheet" />
+  <style>
+    @font-face {
+    font-family: Lovely;
+    src: url('Lovely-Valentine-Script.ttf');
+}
+
+@font-face {
+    font-family: Lovely2;
+    src: url('Lovely-Valentine-Sans.ttf');
+}
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100vw;
+      height: 100vh;
+      font-family: 'Lovely2', sans-serif;
+      background: linear-gradient(135deg, #f6f0fb, #e7dbf7);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Decoração - Vinhas */
+    body::before,
+    body::after {
+      content: '';
+      position: absolute;
+      background-repeat: no-repeat;
+      background-size: contain;
+      width: 600px;
+      height: 600px;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    body::before {
+      top: 0;
+      left: 0;
+      background-image: url('a.png');
+      transform: rotate(90deg);
+    }
+
+    body::after {
+      bottom: 0;
+      right: 0;
+      background-image: url('a.png');
+      transform: rotate(270deg);
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      padding: 30px;
+      margin-bottom: -150px;
+      padding-top: 150px;
+      position: relative;
+      z-index: 6;
+    }
+
+    .top-bar input {
+      padding: 15px;
+      font-size: 18px;
+      border: 1px solid #aaa;
+      border-radius: 8px;
+      width: 120px;
+      text-align: center;
+    }
+
+    .top-bar button {
+      padding: 15px 25px;
+      font-size: 18px;
+      background-color: #a678db;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .main {
+      display: flex;
+      height: calc(100vh - 120px);
+      position: relative;
+      z-index: 2;
+    }
+
+    .left,
+    .right {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 3;
+    }
+
+    .circle {
+      position: relative;
+      width: 220px;
+      height: 220px;
+    }
+
+    .circle svg {
+      transform: rotate(-90deg);
+    }
+
+    .circle circle {
+      fill: none;
+      stroke-width: 10;
+      stroke-linecap: round;
+    }
+
+    .circle .bg {
+      stroke: #e0d0f0;
+    }
+
+    .circle .progress {
+      stroke: #a678db;
+      stroke-dasharray: 628;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 5s linear;
+    }
+
+    .circle-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Lovely2', monospace;
+      font-size: 90px;
+      color: #5f41a5;
+    }
+
+    /* Frase abaixo do contador */
+    .resultado {
+      margin-top: 30px;
+      font-size: 28px;
+      color: #6b44b1;
+      text-align: center;
+      min-height: 40px; /* para evitar pulos no layout */
+      font-weight: 600;
+      font-family: 'Lovely2', sans-serif;
+    }
+
+    .ranking {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      font-size: 32px;
+      max-width: 300px;
+    }
+
+    .ranking div {
+      padding: 15px 20px;
+      border-radius: 10px;
+      background-color: #e0d4f7;
+      text-align: center;
+      font-weight: 600;
+      font-family: 'Lovely2', sans-serif;
+    }
+
+    .ranking div:nth-child(1) {
+      background-color: #ffe08a;
+    }
+
+    .ranking div:nth-child(2) {
+      background-color: #d0d0d0;
+    }
+
+    .ranking div:nth-child(3) {
+      background-color: none;
+    }
+
+    @media (max-width: 768px) {
+      .main {
+        flex-direction: column;
+      }
+      .left,
+      .right {
+        width: 100%;
+        padding: 20px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <input type="number" id="min" placeholder="De" value="1" />
+    <input type="number" id="max" placeholder="Até" value="110" />
+    <button onclick="sortear()">Sortear</button>
+  </div>
+
+  <div class="main">
+    <div class="left">
+      <div class="circle">
+        <svg width="220" height="220">
+          <circle class="bg" cx="110" cy="110" r="100"></circle>
+          <circle class="progress" cx="110" cy="110" r="100"></circle>
+        </svg>
+        <div class="circle-text" id="timer">5</div>
+      </div>
+      <div class="resultado" id="resultado"></div>
+    </div>
+
+    <div class="right">
+      <div class="ranking" id="ranking">
+        <div>—</div>
+        <div>—</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let resultados = [];
+
+    function sortear() {
+      const min = parseInt(document.getElementById('min').value);
+      const max = parseInt(document.getElementById('max').value);
+      const resultadoEl = document.getElementById('resultado');
+      const timerEl = document.getElementById('timer');
+      const progressCircle = document.querySelector('.progress');
+
+      if (isNaN(min) || isNaN(max) || min >= max) {
+        alert('Intervalo inválido.');
+        return;
+      }
+
+      // Reset visual da barra circular ANTES de iniciar a animação
+      progressCircle.style.transition = 'none';
+      progressCircle.style.strokeDashoffset = '0';
+      void progressCircle.offsetWidth; // Força reflow
+
+      // Inicia animação circular
+      progressCircle.style.transition = 'stroke-dashoffset 5s linear';
+      progressCircle.style.strokeDashoffset = '628';
+
+      let tempo = 5;
+      timerEl.textContent = tempo;
+      resultadoEl.textContent = '';
+
+      const intervalo = setInterval(() => {
+        tempo--;
+        timerEl.textContent = tempo;
+
+        if (tempo <= 0) {
+          clearInterval(intervalo);
+
+          // Resetar o círculo para visibilidade
+          progressCircle.style.transition = 'none';
+          progressCircle.style.strokeDashoffset = '0';
+
+          const sorteado = Math.floor(Math.random() * (max - min + 1)) + min;
+          resultadoEl.textContent = `Número sorteado: ${sorteado}`;
+
+          // Adiciona no ranking se não existir e limite 3
+          if (!resultados.includes(sorteado)) {
+            if (resultados.length < 2) {
+              resultados.push(sorteado);
+            }
+          }
+
+          atualizarRanking();
+        }
+      }, 1000);
+    }
+
+    function atualizarRanking() {
+      const rankingEl = document.getElementById('ranking');
+      rankingEl.innerHTML = '';
+
+      for (let i = 0; i < 2; i++) {
+        const div = document.createElement('div');
+        div.textContent = resultados[i] !== undefined ? resultados[i] : '—';
+        rankingEl.appendChild(div);
+      }
+    }
+  </script>
+</body>
+</html>
