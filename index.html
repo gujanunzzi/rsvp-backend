@@ -1,133 +1,78 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Confirmação de Presença - Casamento</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f8f4f0;
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px 20px;
-    }
-    h1 { color: #8b3a3a; }
-    .card {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-      max-width: 400px;
-      width: 100%;
-      text-align: center;
-      margin-bottom: 40px;
-      position: relative;
-    }
-    form {
-      margin-top: 15px;
-      position: relative;
-    }
-    input {
-      padding: 10px;
-      width: 100%;
-      font-size: 1em;
-      box-sizing: border-box;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    button {
-      margin-top: 10px;
-      padding: 10px;
-      width: 100%;
-      font-size: 1em;
-      background-color: #8b3a3a;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-    #message {
-      margin-top: 15px;
-      min-height: 1.5em;
-    }
-    .success { color: green; }
-    .error { color: red; }
-    .guest-list {
-      max-width: 400px;
-      width: 100%;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-      max-height: 350px;
-      overflow-y: auto;
-    }
-    .guest-list h2 {
-      text-align: center;
-      margin-bottom: 10px;
-      color: #8b3a3a;
-    }
-    .guest {
-      padding: 6px 0;
-      border-bottom: 1px solid #eee;
-      font-size: 1em;
-      user-select: none;
-    }
-    .confirmed {
-      text-decoration: line-through;
-      color: #aaa;
-    }
-    /* Autocomplete suggestions */
-    #suggestions {
-      position: absolute;
-      background: white;
-      border: 1px solid #ccc;
-      border-top: none;
-      width: 100%;
-      max-height: 150px;
-      overflow-y: auto;
-      box-sizing: border-box;
-      border-radius: 0 0 5px 5px;
-      z-index: 1000;
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    #suggestions li {
-      padding: 8px 10px;
-      cursor: pointer;
-    }
-    #suggestions li:hover {
-      background-color: #f0e6e6;
-    }
-  </style>
+  <!-- Codificação de caracteres -->
+  <meta charset="UTF-8">
+
+  <!-- Compatibilidade com Internet Explorer -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- Responsividade em dispositivos móveis -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Título da página -->
+  <title>Casamento - Rafaela & Gustavo</title>
+
+  <!-- Descrição para SEO e redes sociais -->
+  <meta name="description" content="Nosso dia está chegando! Confirme sua presença na lista e veja todas as informações. 🥳💍">
+
+  <!-- Favicon -->
+  <link rel="icon" href="img/Logo-G-e-R.png" type="image/x-icon">
+
+  <!-- Estilos do site -->
+<link rel="stylesheet" href="../casamento/site/css/style.css">
+  <!-- Open Graph para compartilhamento no Facebook, WhatsApp, etc -->
+  <meta property="og:title" content="Casamento de Rafaela & Gustavo">
+  <meta property="og:description" content="Você está convidado para o grande dia! Veja os detalhes aqui.">
+  <!--<meta property="og:image" content="https://seusite.com/imagens/preview.jpg">
+  <meta property="og:url" content="https://seusite.com">
+  <meta property="og:type" content="website">-->
+
 </head>
 <body>
-
-  <h1>Confirme sua Presença</h1>
+  <div id="navbar">
+    <img src="../casamento/site/img/Logo-G-e-R.png" id="logo"/>
+    <a href="../casamento/site/index.html">INÍCIO</a>
+    <a href="../casamento/site/index.html#evento">EVENTO</a>
+    <a href="#presença">LISTA DE PRESENÇA (RSVP)</a>
+  </div>
+  
+  
+<div class="corpo2">
+  <h1 class="versiculos">Confirme sua Presença</h1>
   <div class="card">
     <p><strong>Digite o nome igual o da lista e confirme sua presença.</strong></p>
     <form id="rsvpForm" autocomplete="off" novalidate>
       <input type="text" id="guestName" placeholder="Seu nome completo" />
       <ul id="suggestions"></ul>
-      <button type="submit">Confirmar Presença</button>
+      <button class="botao2" type="submit">Confirmar Presença</button>
     </form>
     <div id="message"></div>
   </div>
+  <div class="card2">
+    <p><strong>Precisa cancelar sua presença?</strong></p>
+    <button class="btncancel" onclick="abrirCancelamento()">Cancelar Presença</button>  
+  </div>
+
+  <div id="overlayCancel" class="overlay2 hidden">
+  <div class="overlay-content">
+    <h2>Cancelar Confirmação</h2>
+    <input type="text" id="cancelNameInput" placeholder="Digite seu nome" />
+    <ul id="cancelSuggestions"></ul>
+    <button class="btncancel" onclick="executarCancelamento()">Confirmar Cancelamento</button>
+    <button class="btncancel" onclick="fecharCancelamento()">Fechar</button>
+    <div id="cancelMessage"></div>
+  </div>
+</div>
 
   <div class="guest-list">
     <h2>Lista de Convidados</h2>
     <div id="guestListContainer"></div>
 
   </div>
-<a href="sorteio.html">pagina 2</a>
+<a href="sorteio.html">pagina</a>
+
+</div>
 <script>
   const form = document.getElementById('rsvpForm');
   const input = document.getElementById('guestName');
@@ -265,6 +210,87 @@
       clearSuggestions();
     }
   });
+
+  const overlay = document.getElementById('overlayCancel');
+const cancelInput = document.getElementById('cancelNameInput');
+const cancelSuggestions = document.getElementById('cancelSuggestions');
+const cancelMessage = document.getElementById('cancelMessage');
+
+function abrirCancelamento() {
+  cancelInput.value = '';
+  cancelMessage.innerHTML = '';
+  cancelSuggestions.innerHTML = '';
+  overlay.classList.remove('hidden');
+  cancelInput.focus();
+}
+
+function fecharCancelamento() {
+  overlay.classList.add('hidden');
+}
+
+cancelInput.addEventListener('input', () => {
+  const term = normalizeName(cancelInput.value);
+  if (!term) {
+    cancelSuggestions.innerHTML = '';
+    return;
+  }
+
+  const matches = guests.filter(g =>
+    normalizeName(g.nome).startsWith(term) && g.confirmado
+  );
+
+  cancelSuggestions.innerHTML = '';
+  matches.forEach(g => {
+    const li = document.createElement('li');
+    li.textContent = g.nome;
+    li.addEventListener('click', () => {
+      cancelInput.value = g.nome;
+      cancelSuggestions.innerHTML = '';
+    });
+    cancelSuggestions.appendChild(li);
+  });
+});
+
+async function executarCancelamento() {
+  cancelMessage.innerHTML = '';
+  const name = cancelInput.value.trim();
+  if (!name) {
+    cancelMessage.innerHTML = '<p class="error">Digite seu nome.</p>';
+    return;
+  }
+
+  const guest = guests.find(g => normalizeName(g.nome) === normalizeName(name));
+  if (!guest) {
+    cancelMessage.innerHTML = '<p class="error">Nome não encontrado.</p>';
+    return;
+  }
+
+  if (!guest.confirmado) {
+    cancelMessage.innerHTML = '<p class="error">Este nome não está confirmado.</p>';
+    return;
+  }
+
+  try {
+    const res = await fetch('https://rsvp-backend-1ry5.onrender.com/cancelar-presenca', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome: guest.nome })
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      cancelMessage.innerHTML = `<p class="success">Presença de ${guest.nome} cancelada com sucesso.</p>`;
+      await loadGuestList();
+      cancelInput.value = '';
+      cancelSuggestions.innerHTML = '';
+    } else {
+      cancelMessage.innerHTML = `<p class="error">${data.error || 'Erro ao cancelar.'}</p>`;
+    }
+  } catch {
+    cancelMessage.innerHTML = '<p class="error">Erro de conexão.</p>';
+  }
+}
+
 
   // Carregar lista no início
   loadGuestList();
