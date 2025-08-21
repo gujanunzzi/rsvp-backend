@@ -1,52 +1,55 @@
 const express = require('express');
-const path = require('path');
-const app = express();
 const cors = require('cors');
+const { Pool } = require('pg');
+const app = express();
 app.use(cors());
-
 app.use(express.json());
 
-// Lista de convidados
-const convidados = [
-  { nome: "Ana Silva", confirmado: false },
-  { nome: "Bernardo Fagundes", confirmado: false },
-  { nome: "Bárbara Aleixa", confirmado: false },
-  { nome: "Bankai Katenkyoko", confirmado: false },
-  { nome: "Bruno Costa", confirmado: false },
-  { nome: "Carlos Souza", confirmado: false },
-  { nome: "Daniela Rocha", confirmado: false },
-  { nome: "Eduardo Lima", confirmado: false },
-  // ...coloque até 100 nomes aqui
-];
-
-// Servir o index.html
-app.use(express.static(__dirname));
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+// Conexão com o banco da Neon (use variável de ambiente)
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false, // Necessário para Neon
+  },
 });
 
-// Rota para obter a lista
-app.get('/convidados', (req, res) => {
-  res.json(convidados);
+// Rota para obter lista de convidados
+app.get('/convidados', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT nome, confirmado FROM convidados ORDER BY nome');
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: 'Erro ao acessar o banco de dados' });
+  }
 });
 
 // Rota para confirmar presença
-app.post('/confirmar-presenca', (req, res) => {
-  const nome = req.body.nome;
-  const convidado = convidados.find(c => c.nome.toLowerCase() === nome.toLowerCase());
-  if (!convidado) {
-    return res.status(404).json({ error: 'Convidado não encontrado.' });
+app.post('/confirmar-presenca', async (req, res) => {
+  const { nome } = req.body;
+  if (!nome) return res.status(400).json({ error: 'Nome é obrigatório' });
+
+  try {
+    const select = await pool.query('SELECT * FROM convidados WHERE LOWER(nome) = LOWER($1)', [nome]);
+    const convidado = select.rows[0];
+
+    if (!convidado) {
+      return res.status(404).json({ error: 'Convidado não encontrado.' });
+    }
+
+    if (convidado.confirmado) {
+      return res.status(400).json({ error: 'Presença já confirmada.' });
+    }
+
+    await pool.query('UPDATE convidados SET confirmado = TRUE WHERE id = $1', [convidado.id]);
+
+    res.json({ message: 'Presença confirmada com sucesso.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Erro ao confirmar presença.' });
   }
-  if (convidado.confirmado) {
-    return res.status(400).json({ error: 'Presença já confirmada.' });
-  }
-  convidado.confirmado = true;
-  res.json({ message: 'Presença confirmada com sucesso.' });
 });
 
-// Rodar servidor
-const PORT = 3000;
+// Inicia o servidor
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
