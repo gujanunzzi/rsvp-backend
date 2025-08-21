@@ -1,0 +1,474 @@
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+}
+
+/*-------------------------------------------------------------------------------*/
+@font-face {
+    font-family: Lovely;
+    src: url('../fonts/lovely_valentine_script/Lovely-Valentine-Script.ttf');
+}
+
+@font-face {
+    font-family: Lovely2;
+    src: url('../fonts/lovely_valentine_script/Lovely-Valentine-Sans.ttf');
+}
+/*-------------------------------------------------------------------------------*/
+
+.rafagu {
+    position: relative;
+    width: 100;
+    display: inline-block; /* faz com que se ajuste ao tamanho da imagem */
+}
+
+.rafagu img {
+    width: 100%;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 99%;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.6), /* escurece o topo */
+      
+      rgba(0, 0, 0, 0.4) 65% /* escurece o topo */
+      
+    );
+    pointer-events: none;   
+  }
+  
+  .hero-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 60px;
+    text-align: center;
+    z-index: 2;
+    padding: 50px;
+    padding-left: 70px;
+    font-family: 'Lovely', Arial;
+
+    border: 8px solid #fff;
+  }
+
+.corpo {
+    position: static;
+    width: 60%;
+    margin: auto;
+    padding-top: 150px;
+    padding-left: 40px;
+    padding-right: 40px;
+    justify-items: center;
+}
+
+.corpo2 {
+    position: static;
+    width: 60%;
+    margin: auto;
+    padding-top: 150px;
+    padding-left: 40px;
+    padding-right: 40px;
+    justify-items: center;
+}
+
+#navbar {
+    position: fixed;
+    display: flex;
+  align-items: center; 
+  justify-content: flex-start;
+    width: 100%;
+    top: 0;
+    overflow: hidden;
+    background-color: white;
+    height: 150px;
+    overflow: visible; /* permite que a imagem ultrapasse a altura da div */
+  z-index: 1000;
+  transition: height 0.8s ease;
+  }
+
+  #navbar.shrink {
+    height: 65px;
+  }
+
+  #navbar a {
+    text-decoration: none;
+    color:#6b6b6b;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    margin-left: 35px;
+    transition: margin-left 0.3s ease;
+    transition: font-size 0.8s ease;
+  }
+
+  #navbar.shrink a {
+    font-size: 14px; /* ou o tamanho que quiser */
+  }
+
+  #logo{
+    height: 90%;
+  }
+  
+  /*footer*/
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+  /* The progress container (grey background) */
+.progress-container {
+    width: 100%;
+    height: 8px;
+    background: #ccc;
+  }
+  
+  /* The progress bar (scroll indicator) */
+  .progress-bar {
+    height: 8px;
+    background: #905BDC;
+    width: 0%;
+  }
+
+.versiculos {
+    font-family: 'Lovely2', Arial;
+    font-size: 40px;
+    color: #9b73d3;
+}
+
+.botao {
+    font-family: 'Lovely2', Arial;
+    font-size: 30px;
+    background-color: #9b73d3;
+    border: none;
+    padding: 15px 25px;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    color: white;
+    border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #854fd1;
+}
+
+.botao:hover {background-color: #8b67bd}
+
+.botao:active {
+  background-color: #865ebd;
+  box-shadow: 0 5px #663ca0;
+  transform: translateY(4px);
+}
+
+h1{
+  font-family: 'Lovely', Arial;
+  font-size: 100px;
+  margin: 0 auto;
+  justify-content: center;
+  display: flex;
+  color: #905BDC;
+}
+
+ .regras-box {
+      max-width: 700px;
+      margin: auto;
+      background: #f5efff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border: 1px solid #f2e7e1;
+    }
+
+    .regras-titulo {
+      text-align: center;
+      color: #9b73d3;
+      margin-bottom: 30px;
+      font-family: 'Lovely2', Arial;
+    }
+
+    .regra-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .regra-emoji {
+      font-size: 24px;
+      margin-right: 15px;
+      flex-shrink: 0;
+    }
+
+    .regra-texto {
+      font-size: 16px;
+      line-height: 1.6;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+#ifra {
+  width: 600px;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+#contador {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+  font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+}
+
+.bloco {
+  background-color: #9b73d3;
+  padding: 30px 20px;
+  border-radius: 20px;
+  text-align: center;
+  width: 100px;
+}
+
+.bloco span {
+  font-size: 48px;
+  font-weight: bold;
+  color: #333;
+}
+
+.label {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+
+.card {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .card2 {
+      background: white;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      max-width: 435px;
+      width: 100%;
+      text-align: center;
+      margin-top: -20px;
+      margin-bottom: 40px;
+    }
+    form {
+      margin-top: 15px;
+      position: relative;
+    }
+    input {
+      padding: 10px;
+      width: 100%;
+      font-size: 1em;
+      box-sizing: border-box;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .botao2 {
+      margin-top: 10px;
+      padding: 10px;
+      width: 100%;
+      font-size: 1em;
+      font-family: 'Lovely2', Arial;
+      background-color: #9b73d3;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+  box-shadow: 0 9px #854fd1;
+    }
+    .botao2:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .botao2:hover {background-color: #8b67bd}
+
+    .botao2:active {
+  background-color: #865ebd;
+  box-shadow: 0 5px #663ca0;
+  transform: translateY(4px);
+}
+
+    #message {
+      margin-top: 15px;
+      min-height: 1.5em;
+    }
+    .success { color: green; }
+    .error { color: red; }
+    .guest-list {
+      max-width: 400px;
+      width: 100%;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-height: 350px;
+      overflow-y: auto;
+    }
+    .guest-list h2 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: #9b73d3;
+    }
+    .guest {
+      padding: 6px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 1em;
+      user-select: none;
+    }
+    .confirmed {
+      text-decoration: line-through;
+      color: #aaa;
+    }
+    /* Autocomplete suggestions */
+    #suggestions {
+      position: absolute;
+      background: white;
+      border: 1px solid #ccc;
+      border-top: none;
+      width: 100%;
+      max-height: 150px;
+      overflow-y: auto;
+      box-sizing: border-box;
+      border-radius: 0 0 5px 5px;
+      z-index: 1000;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    #suggestions li {
+      padding: 8px 10px;
+      cursor: pointer;
+    }
+    #suggestions li:hover {
+      background-color: #f0e6e6;
+    }
+
+    .overlay2 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+.hidden {
+  display: none;
+}
+
+.overlay-content {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+}
+
+#cancelSuggestions {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  border: 1px solid #ccc;
+  max-height: 150px;
+  overflow-y: auto;
+  text-align: left;
+  border-radius: 4px;
+}
+
+#cancelSuggestions li {
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+#cancelSuggestions li:hover {
+  background-color: #eee;
+}
+
+.btncancel {
+      margin-top: 10px;
+      padding: 10px;
+      width: 90%;
+      font-size: 1em;
+      font-family: 'Lovely2', Arial;
+      background-color: rgb(255, 33, 33);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+
+  /*---------------------------------------------------------------------------------------------------------*/
+
+  /* The snackbar - position it at the bottom and in the middle of the screen */
+#snackbar {
+    visibility: hidden; /* Hidden by default. Visible on click */
+    min-width: 250px; /* Set a default minimum width */
+    margin-left: -125px; /* Divide value of min-width by 2 */
+    background-color: #333; /* Black background color */
+    color: #fff; /* White text color */
+    text-align: center; /* Centered text */
+    border-radius: 2px; /* Rounded borders */
+    padding: 16px; /* Padding */
+    position: fixed; /* Sit on top of the screen */
+    z-index: 1; /* Add a z-index if needed */
+    left: 50%; /* Center the snackbar */
+    bottom: 30px; /* 30px from the bottom */
+  }
+  
+  /* Show the snackbar when clicking on a button (class added with JavaScript) */
+  #snackbar.show {
+    visibility: visible; /* Show the snackbar */
+    /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+    However, delay the fade out process for 2.5 seconds */
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  }
+  
+  /* Animations to fade the snackbar in and out */
+  @-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+  }
+  
+  @keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+  }
+  
+  @-webkit-keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+  }
+  
+  @keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+  }

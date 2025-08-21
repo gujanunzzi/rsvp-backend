@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Codificação de caracteres -->
+  <meta charset="UTF-8">
+
+  <!-- Compatibilidade com Internet Explorer -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- Responsividade em dispositivos móveis -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Título da página -->
+  <title>Casamento - Rafaela & Gustavo</title>
+
+  <!-- Descrição para SEO e redes sociais -->
+  <meta name="description" content="Nosso dia está chegando! Confirme sua presença na lista e veja todas as informações. 🥳💍">
+
+  <!-- Favicon -->
+  <link rel="icon" href="img/Logo-G-e-R.png" type="image/x-icon">
+
+  <!-- Estilos do site -->
+<link rel="stylesheet" href="../casamento/site/css/style.css">
+  <!-- Open Graph para compartilhamento no Facebook, WhatsApp, etc -->
+  <meta property="og:title" content="Casamento de Rafaela & Gustavo">
+  <meta property="og:description" content="Você está convidado para o grande dia! Veja os detalhes aqui.">
+  <!--<meta property="og:image" content="https://seusite.com/imagens/preview.jpg">
+  <meta property="og:url" content="https://seusite.com">
+  <meta property="og:type" content="website">-->
+
+</head>
+<body>
+  <div id="navbar">
+    <img src="img/Logo-G-e-R.png" id="logo"/>
+    <a href="index.html">INÍCIO</a>
+    <a href="index.html#evento">EVENTO</a>
+    <a href="#presença">LISTA DE PRESENÇA (RSVP)</a>
+  </div>
+  
+  
+<div class="corpo2">
+  <h1 class="versiculos">Confirme sua Presença</h1>
+  <div class="card">
+    <p><strong>Digite o nome igual o da lista e confirme sua presença.</strong></p>
+    <form id="rsvpForm" autocomplete="off" novalidate>
+      <input type="text" id="guestName" placeholder="Seu nome completo" />
+      <ul id="suggestions"></ul>
+      <button class="botao2" type="submit">Confirmar Presença</button>
+    </form>
+    <div id="message"></div>
+  </div>
+  <div class="card2">
+    <p><strong>Precisa cancelar sua presença?</strong></p>
+    <button class="btncancel" onclick="abrirCancelamento()">Cancelar Presença</button>  
+  </div>
+
+  <div id="overlayCancel" class="overlay2 hidden">
+  <div class="overlay-content">
+    <h2>Cancelar Confirmação</h2>
+    <input type="text" id="cancelNameInput" placeholder="Digite seu nome" />
+    <ul id="cancelSuggestions"></ul>
+    <button class="btncancel" onclick="executarCancelamento()">Confirmar Cancelamento</button>
+    <button class="btncancel" onclick="fecharCancelamento()">Fechar</button>
+    <div id="cancelMessage"></div>
+  </div>
+</div>
+
+  <div class="guest-list">
+    <h2>Lista de Convidados</h2>
+    <div id="guestListContainer"></div>
+
+  </div>
+
+</div>
+<script>
+  const form = document.getElementById('rsvpForm');
+  const input = document.getElementById('guestName');
+  const suggestionsEl = document.getElementById('suggestions');
+  const message = document.getElementById('message');
+  const guestListContainer = document.getElementById('guestListContainer');
+
+  // Vai guardar a lista do backend
+  let guests = [];
+
+  function normalizeName(name) {
+  return name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
+
+  function showMessage(text, type) {
+    message.innerHTML = `<p class="${type}">${text}</p>`;
+  }
+
+  function clearMessage() {
+    message.innerHTML = '';
+  }
+
+  function clearSuggestions() {
+    suggestionsEl.innerHTML = '';
+    suggestionsEl.style.display = 'none';
+  }
+
+  function updateSuggestions() {
+    const term = normalizeName(input.value);
+    if (!term) {
+      clearSuggestions();
+      return;
+    }
+
+    const matches = guests.filter(g =>
+  normalizeName(g.nome).startsWith(term) && !g.confirmado
+);
+
+
+    if (matches.length === 0) {
+      clearSuggestions();
+      return;
+    }
+
+    suggestionsEl.innerHTML = '';
+    matches.forEach(g => {
+      const li = document.createElement('li');
+      li.textContent = g.nome;
+      li.addEventListener('click', () => {
+        input.value = g.nome;
+        clearSuggestions();
+        confirmPresence();
+      });
+      suggestionsEl.appendChild(li);
+    });
+    suggestionsEl.style.display = 'block';
+  }
+
+  function renderGuestList() {
+    guestListContainer.innerHTML = '';
+    guests.forEach(g => {
+      const div = document.createElement('div');
+      div.className = 'guest';
+      if (g.confirmado) div.classList.add('confirmed');
+      div.textContent = g.nome;
+      guestListContainer.appendChild(div);
+    });
+  }
+
+  async function loadGuestList() {
+    try {
+      const res = await fetch('https://rsvp-backend-1ry5.onrender.com/convidados');
+      if (!res.ok) throw new Error('Erro ao carregar lista');
+      guests = await res.json();
+      renderGuestList();
+    } catch (e) {
+      showMessage('Erro ao carregar a lista de convidados.', 'error');
+    }
+  }
+
+  async function confirmPresence() {
+    clearMessage();
+    const name = input.value.trim();
+    if (!name) {
+      showMessage('Por favor, digite seu nome.', 'error');
+      return;
+    }
+
+    const guest = guests.find(g => normalizeName(g.nome) === normalizeName(name));
+    if (!guest) {
+      showMessage('Nome não encontrado na lista.', 'error');
+      return;
+    }
+
+    if (guest.confirmado) {
+      showMessage('Presença já confirmada.', 'error');
+      return;
+    }
+
+    try {
+      const res = await fetch('https://rsvp-backend-1ry5.onrender.com/confirmar-presenca', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome: guest.nome })
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        showMessage(`Obrigado, ${guest.nome}! Presença confirmada 🎉`, 'success');
+        input.value = '';
+        await loadGuestList();
+        clearSuggestions();
+      } else {
+        showMessage(data.error || 'Erro ao confirmar presença.', 'error');
+      }
+    } catch {
+      showMessage('Erro de conexão. Tente novamente.', 'error');
+    }
+  }
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    confirmPresence();
+  });
+
+  input.addEventListener('input', updateSuggestions);
+
+  document.addEventListener('click', e => {
+    if (!form.contains(e.target)) {
+      clearSuggestions();
+    }
+  });
+
+  const overlay = document.getElementById('overlayCancel');
+const cancelInput = document.getElementById('cancelNameInput');
+const cancelSuggestions = document.getElementById('cancelSuggestions');
+const cancelMessage = document.getElementById('cancelMessage');
+
+function abrirCancelamento() {
+  cancelInput.value = '';
+  cancelMessage.innerHTML = '';
+  cancelSuggestions.innerHTML = '';
+  overlay.classList.remove('hidden');
+  cancelInput.focus();
+}
+
+function fecharCancelamento() {
+  overlay.classList.add('hidden');
+}
+
+cancelInput.addEventListener('input', () => {
+  const term = normalizeName(cancelInput.value);
+  if (!term) {
+    cancelSuggestions.innerHTML = '';
+    return;
+  }
+
+  const matches = guests.filter(g =>
+    normalizeName(g.nome).startsWith(term) && g.confirmado
+  );
+
+  cancelSuggestions.innerHTML = '';
+  matches.forEach(g => {
+    const li = document.createElement('li');
+    li.textContent = g.nome;
+    li.addEventListener('click', () => {
+      cancelInput.value = g.nome;
+      cancelSuggestions.innerHTML = '';
+    });
+    cancelSuggestions.appendChild(li);
+  });
+});
+
+async function executarCancelamento() {
+  cancelMessage.innerHTML = '';
+  const name = cancelInput.value.trim();
+  if (!name) {
+    cancelMessage.innerHTML = '<p class="error">Digite seu nome.</p>';
+    return;
+  }
+
+  const guest = guests.find(g => normalizeName(g.nome) === normalizeName(name));
+  if (!guest) {
+    cancelMessage.innerHTML = '<p class="error">Nome não encontrado.</p>';
+    return;
+  }
+
+  if (!guest.confirmado) {
+    cancelMessage.innerHTML = '<p class="error">Este nome não está confirmado.</p>';
+    return;
+  }
+
+  try {
+    const res = await fetch('https://rsvp-backend-1ry5.onrender.com/cancelar-presenca', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome: guest.nome })
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      cancelMessage.innerHTML = `<p class="success">Presença de ${guest.nome} cancelada com sucesso.</p>`;
+      await loadGuestList();
+      cancelInput.value = '';
+      cancelSuggestions.innerHTML = '';
+    } else {
+      cancelMessage.innerHTML = `<p class="error">${data.error || 'Erro ao cancelar.'}</p>`;
+    }
+  } catch {
+    cancelMessage.innerHTML = '<p class="error">Erro de conexão.</p>';
+  }
+}
+
+
+  // Carregar lista no início
+  loadGuestList();
+</script>
+</body>
+</html>
