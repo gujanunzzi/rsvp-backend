@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Título da página -->
-  <title>Casamento - Rafaela & Gustavo</title>
+  <title>Confirme sua presença - Casamento</title>
 
   <!-- Descrição para SEO e redes sociais -->
   <meta name="description" content="Nosso dia está chegando! Confirme sua presença na lista e veja todas as informações. 🥳💍">
@@ -34,12 +34,13 @@
     <img src="img/Logo-G-e-R.png" id="logo"/>
     <a href="index.html">INÍCIO</a>
     <a href="index.html#evento">EVENTO</a>
-    <a href="#presença">LISTA DE PRESENÇA (RSVP)</a>
+    <a href="#presença">LISTA DE PRESENÇA</a>
   </div>
   
   
 <div class="corpo2">
   <h1 class="versiculos">Confirme sua Presença</h1>
+  <p style="color: red;">Caso a lista não tenha carregado, aguarde alguns segundos ou atualize a página</p>
   <div class="card">
     <p><strong>Digite o nome igual o da lista e confirme sua presença.</strong></p>
     <form id="rsvpForm" autocomplete="off" novalidate>
@@ -278,7 +279,7 @@ async function executarCancelamento() {
     const data = await res.json();
 
     if (res.ok) {
-      cancelMessage.innerHTML = `<p class="success">Presença de ${guest.nome} cancelada com sucesso.</p>`;
+      cancelMessage.innerHTML = `<p class="success">Sinto muito ${guest.nome}! 😔.</p>`;
       await loadGuestList();
       cancelInput.value = '';
       cancelSuggestions.innerHTML = '';

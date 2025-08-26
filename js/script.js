@@ -30,7 +30,6 @@ var x = setInterval(updateCountdown, 1000);
 //-------------------------------------------------------------------------------------------------------------
 window.addEventListener('scroll', myFunction);
 
-
 function myFunction() {
   var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
   var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -38,12 +37,20 @@ function myFunction() {
   document.getElementById("myBar").style.width = scrolled + "%";
 
   const navbar = document.getElementById("navbar");
-  if (window.scrollY > 50) {
-    navbar.classList.add("shrink");
+
+  // Só aplicar o efeito shrink se a largura for maior que 768px
+  if (window.innerWidth > 768) {
+    if (window.scrollY > 50) {
+      navbar.classList.add("shrink");
+    } else {
+      navbar.classList.remove("shrink");
+    }
   } else {
+    // Garante que a classe seja removida em telas pequenas
     navbar.classList.remove("shrink");
   }
 }
+
 
 
 //-------------------------------------------------------------------------------------------------------------

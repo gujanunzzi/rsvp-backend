@@ -20,7 +20,7 @@ body {
 
 .rafagu {
     position: relative;
-    width: 100;
+    width: 100%;
     display: inline-block; /* faz com que se ajuste ao tamanho da imagem */
 }
 
@@ -213,7 +213,7 @@ h1{
     }
 
 #ifra {
-  width: 600px;
+  max-width: 600px;
   justify-content: center;
   margin: 0 auto;
 }
@@ -472,3 +472,181 @@ h1{
     from {bottom: 30px; opacity: 1;}
     to {bottom: 0; opacity: 0;}
   }
+
+  /* RESPONSIVIDADE PARA CELULARES */
+@media screen and (max-width: 768px) {
+  html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+body{padding-top: 100px;}
+
+  .corpo,
+  .corpo2 {
+    width: 90%;
+    padding: 20px;
+  }
+
+  #inicio {
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+  }
+
+  .rafagu {
+  width: 100vw;        /* 100% da largura da tela */
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;  /* puxa metade da largura da viewport para a esquerda */
+  margin-right: -50vw; /* evita barra de rolagem horizontal */
+  display: inline-block;
+}
+
+
+  #navbar {
+    top: 0;
+    flex-wrap: wrap;
+    justify-content: left;
+    gap: 10px;
+     position: fixed !important;
+    height: auto !important;
+    transition: none !important;
+    z-index: 1000;
+  }
+
+  #navbar a {
+    font-size: 14px;
+    padding: 6px 10px;
+    margin: 0;
+  }
+
+  #logo {
+    height: 90px;
+    padding: 10px;
+  }
+
+  .hero-text {
+    font-size: 28px;
+    padding: 20px;
+    border-width: 4px;
+  }
+
+  .versiculos {
+    font-size: 22px;
+    text-align: center;
+  }
+
+  #ifra {
+    width: 100%;
+  }
+
+  #ifra iframe {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3; /* Mantém proporção da tela */
+  }
+
+  #contador {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .bloco {
+    width: 80%;
+  }
+
+  h1 {
+    font-size: 50px;
+    text-align: center;
+  }
+
+  .botao {
+    width: 100%;
+    font-size: 18px;
+    padding: 10px 15px;
+  }
+
+  .regras-box {
+    width: 100%;
+    padding: 20px;
+    left: 50%;
+  right: 50%;
+  margin-left: -50vw;  /* puxa metade da largura da viewport para a esquerda */
+  margin-right: -50vw;
+  }
+
+  .regras-titulo {
+    font-size: 20px;
+  }
+
+  .regra-item {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .regra-emoji {
+    font-size: 20px;
+    margin-right: 10px;
+  }
+
+  .regra-texto {
+    font-size: 14px;
+  }
+
+  .footer {
+    position: relative;
+  }
+
+  .card,
+  .card2,
+  .guest-list {
+    width: 100%;
+    max-width: none;
+  }
+
+  .botao2,
+  .btncancel {
+    width: 100%;
+  }
+
+  #contador {
+    display: flex !important;   /* força o flex no celular */
+    flex-direction: row !important; /* filhos lado a lado */
+    justify-content: space-around; /* espaça os blocos */
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+  }
+
+  #contador .bloco {
+    flex: 1 1 0;
+    min-width: 90px;
+    text-align: center;
+  }
+
+  .footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    z-index: 9999;
+  }
+
+  .progress-container {
+    width: 100%;
+    height: 4px;
+    background-color: #ccc;
+  }
+
+  .progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #905BDC;
+    transition: width 0.2s ease;
+  }
+
+}
