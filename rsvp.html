@@ -186,7 +186,7 @@
       const data = await res.json();
 
       if (res.ok) {
-        showMessage(`Obrigado, ${guest.nome}! Presença confirmada 🎉`, 'success');
+        showMessage(`Obrigado, ${guest.nome}! Mal podemos esperar para nos encontrar no dia do evento!! 🥳🥳🤩`, 'success');
         input.value = '';
         await loadGuestList();
         clearSuggestions();
@@ -279,7 +279,7 @@ async function executarCancelamento() {
     const data = await res.json();
 
     if (res.ok) {
-      cancelMessage.innerHTML = `<p class="success">Sinto muito ${guest.nome}! 😔.</p>`;
+      cancelMessage.innerHTML = `<p class="error">Sentimos muito ${guest.nome} que tenha que cancelar sua presença... 😔.</p>`;
       await loadGuestList();
       cancelInput.value = '';
       cancelSuggestions.innerHTML = '';

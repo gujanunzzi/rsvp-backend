@@ -47,7 +47,7 @@ app.post('/confirmar-presenca', async (req, res) => {
 
     await pool.query('UPDATE convidados SET confirmado = TRUE WHERE id = $1', [convidado.id]);
 
-    res.json({ message: 'Mal podemos esperar para nos encontrar no dia do evento!! 🥳🥳🤩' });
+    res.json({ message: 'Presença confirmada com sucesso.' });
   } catch (err) {
     res.status(500).json({ error: 'Erro ao confirmar presença.' });
   }
@@ -83,7 +83,7 @@ app.post('/cancelar-presenca', async (req, res) => {
       [convidado.id]
     );
 
-    res.json({ message: 'Sentimos muito que tenha que cancelar sua presença... 😔' });
+    res.json({ message: 'Presença cancelada com sucesso.' });
 
   } catch (err) {
     console.error(err);
