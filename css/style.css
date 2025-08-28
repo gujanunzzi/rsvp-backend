@@ -1,9 +1,24 @@
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  margin: 0;
+  left: 0;
+  top: 0;
 }
 
 body {
-    margin: 0;
+      margin: 0;
+  left: 0;
+  top: 0;
+}
+
+.rodape {
+  background-color: #ffffff;
+  width: 100vw;
+  justify-content: center;
+  height: 300px;
+  align-content: center;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
 }
 
 /*-------------------------------------------------------------------------------*/
@@ -241,12 +256,30 @@ h1{
   color: #333;
 }
 
+.blocoseg {
+  background-color: #9b73d3;
+  padding: 30px 20px;
+  border-radius: 20px;
+  text-align: center;
+  width: 100px;
+}
+
+.blocoseg span {
+  font-size: 48px;
+  font-weight: bold;
+  color: #333;
+}
+
 .label {
   margin-top: 10px;
   font-size: 14px;
   font-weight: bold;
   color: #333;
 }
+.mini{
+    font-size: 18px;
+    color: #6b6b6b;
+  }
 
 
 .card {
@@ -519,9 +552,8 @@ body{padding-top: 100px;}
   }
 
   #navbar a {
-    font-size: 14px;
-    padding: 6px 10px;
-    margin: 0;
+    font-size: 10px;
+    margin-left: 8px;
   }
 
   #logo {
@@ -552,12 +584,12 @@ body{padding-top: 100px;}
 
   #contador {
     flex-direction: column;
-    gap: 15px;
     max-width: 90vw;
   }
 
   .bloco {
-    max-width: 80px;
+    max-width: 50px;
+    margin: 0;
     padding: 0;
     border-radius: 10px;
     padding-bottom: 8px;
@@ -568,15 +600,22 @@ body{padding-top: 100px;}
     font-size: 35px;
   }
 
+  .blocoseg {
+    display: none;
+  }
+
   h1 {
-    font-size: 50px;
+    font-size: 40px;
     text-align: center;
   }
 
   .botao {
-    width: 100%;
+    width: 50%;
     font-size: 18px;
     padding: 10px 15px;
+    margin: 0 auto;
+    justify-content: center;
+    display: flex;
   }
 
   .regras-box {
@@ -656,6 +695,10 @@ body{padding-top: 100px;}
     width: 0%;
     background-color: #905BDC;
     transition: width 0.2s ease;
+  }
+
+  .mini{
+    font-size: 15px;
   }
 
 }
