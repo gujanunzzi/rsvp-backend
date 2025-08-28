@@ -73,6 +73,7 @@
   </div>
 
 </div>
+<br><br><br><br>
 <script>
   const form = document.getElementById('rsvpForm');
   const input = document.getElementById('guestName');
@@ -279,7 +280,7 @@ async function executarCancelamento() {
     const data = await res.json();
 
     if (res.ok) {
-      cancelMessage.innerHTML = `<p class="error">Sentimos muito ${guest.nome} que tenha que cancelar sua presença... 😔.</p>`;
+      cancelMessage.innerHTML = `<p class="error">Sentimos muito ${guest.nome}, que tenha que cancelar sua presença... 😔.</p>`;
       await loadGuestList();
       cancelInput.value = '';
       cancelSuggestions.innerHTML = '';
