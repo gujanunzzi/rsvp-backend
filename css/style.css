@@ -619,12 +619,11 @@ body{padding-top: 100px;}
   }
 
   .regras-box {
+    position: relative;
     width: 100%;
     padding: 20px;
     left: 50%;
-  right: 50%;
-  margin-left: -50vw;  /* puxa metade da largura da viewport para a esquerda */
-  margin-right: -50vw;
+    transform: translateX(-50%);
   }
 
   .regras-titulo {
